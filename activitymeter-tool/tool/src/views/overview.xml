@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/overview.xml $
+ * $Id: overview.xml 12131 2015-11-25 15:34:48Z mallikamt $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2010, 2011, 2013, 2014, 2015 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="overview-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="overview-header">
+									<model type="icon" icon="/icons/activity-meter.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+							<text>
+								<message selector="summary">
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-enrolled">
+													<model type="text" ref="overview.numEnrolled" />
+													<selectors>
+														<selector selector="summary-enrolled-1">
+															<compareDecision model="overview.numEnrolled" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-added">
+													<model type="text" ref="overview.numAdded" />
+													<selectors>
+														<selector selector="summary-added-1">
+															<compareDecision model="overview.numAdded" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-dropped">
+													<model type="text" ref="overview.numDropped" />
+													<selectors>
+														<selector selector="summary-dropped-1">
+															<compareDecision model="overview.numDropped" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-blocked">
+													<model type="text" ref="overview.numBlocked" />
+													<selectors>
+														<selector selector="summary-blocked-1">
+															<compareDecision model="overview.numBlocked" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+								</message>
+							</text>
+						</container>
+					</section>
+	
+					<section>
+						<container>
+							<text>
+								<message selector="not-visited">
+									<model type="icon" icon="/icons/warning.png" />
+									<model type="component">
+										<container>
+											<navigation style="LINK">
+												<destination template="/alert/0A{0}">
+													<model ref="return" />
+												</destination>
+												<title>
+													<message selector="early-alert">
+														<model type="text" ref="overview.NumNotVisitedInPeriod" />
+														<selectors>
+															<selector selector="early-alert-1">
+																<compareDecision model="overview.NumNotVisitedInPeriod" constant="1" />
+															</selector>
+														</selectors>
+													</message>
+												</title>
+											</navigation>			
+										</container>
+									</model>
+									<selectors>
+										<selector selector="not-visited-1">
+											<compareDecision model="overview.NumNotVisitedInPeriod" constant="1" />
+										</selector>
+									</selectors>
+								</message>
+								<included>
+									<hasValueDecision model="overview.NumNotVisitedInPeriod" />
+								</included>
+							</text>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<!-- the list of participants, and their overviews -->
+		<entityList style="FLAT">
+			<iterator name="user">
+				<model ref="participantOverviews" />
+			</iterator>
+
+			<emptyTitle>
+				<message selector="no-users" />
+			</emptyTitle>
+
+			<colorize color="#FFBAD2">
+				<compareDecision model="user.status" constant="blocked" />
+			</colorize>
+
+			<entityActions>
+				<attachments list="FALSE" model="exportRef" icon="/icons/export.png" />
+			</entityActions>
+
+			<columns>
+				<modelColumn>
+					<title>
+						<message selector="name" />
+					</title>
+					<model type="userInfo" ref="user.id" selector="SORTNAME" disambiguate="TRUE" />
+					<entityNavigations>
+						<navigation style="LINK">
+							<destination template="/student/{0}/S{1}">
+								<model ref="user.id" />
+								<model ref="return" />
+							</destination>
+							<included>
+								<compareDecision model="user.status" constant="instructor" reversed="TRUE" />
+								<compareDecision model="user.status" constant="ta" reversed="TRUE" />
+								<compareDecision model="user.status" constant="observer" reversed="TRUE" />
+							</included>
+						</navigation>
+					</entityNavigations>
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="0" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/0A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/0D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<column>
+					<title>
+						<message selector="status" />
+					</title>
+					<container>
+						<text>
+							<message selector="enrolled">
+								<selectors>
+									<selector selector="blocked">
+										<compareDecision model="user.status" constant="blocked" />	
+									</selector>
+									<selector selector="dropped">
+										<compareDecision model="user.status" constant="dropped" />	
+									</selector>
+									<selector selector="instructor">
+										<compareDecision model="user.status" constant="instructor" />	
+									</selector>
+									<selector selector="ta">
+										<compareDecision model="user.status" constant="ta" />	
+									</selector>
+									<selector selector="observer">
+										<compareDecision model="user.status" constant="observer" />	
+									</selector>
+									<selector selector="added">
+										<compareDecision model="user.status" constant="added" />	
+									</selector>
+								</selectors>
+							</message>
+						</text>
+					</container>
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="1" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/1A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/1D" />
+						</desc>
+					</sort>
+				</column>
+
+				<modelColumn>
+					<title>
+						<message selector="section" />
+					</title>
+					<model ref="user.groupTitle" missing="dash" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="9" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/9A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/9D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="first-visit" />
+					</title>
+					<model type="date" ref="user.firstVisitDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="2" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/2A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/2D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="last-visit" />
+					</title>
+					<model type="date" ref="user.lastVisitDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="3" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/3A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/3D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="visits" />
+					</title>
+					<model type="text" ref="user.numVisits" missing="dash" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="4" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/4A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/4D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="syllabus" />
+					</title>
+					<model type="date" ref="user.syllabusDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="5" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/5A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/5D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="melete" />
+					</title>
+					<model type="text" ref="user.numMeleteViews" missing="dash" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="6" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/6A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/6D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="jforum" />
+					</title>
+					<model type="text" ref="user.numJforumPosts" missing="dash" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="7" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/7A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/7D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="mneme" />
+					</title>
+					<model type="text" ref="user.numMnemeSubmissions" missing="dash" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="8" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/overview/8A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/overview/8D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+			</columns>
+
+		</entityList>
+	
+	</container>
+
+</interface>

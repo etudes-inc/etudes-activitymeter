@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/student.xml $
+ * $Id: student.xml 12158 2015-11-30 18:11:07Z mallikamt $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011, 2012, 2013, 2014, 2015 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="student-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="student-header">
+									<model type="icon" icon="/icons/activity-meter.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+							<text>
+								<message selector="student">
+									<model type="userInfo" ref="userId" selector="SORTNAME" disambiguate="TRUE"  />
+								</message>
+							</text>
+							<text>
+								<message selector="status-enrolled">
+									<selectors>
+										<selector selector="status-blocked">
+											<compareDecision model="studentOverview.status" constant="blocked" />
+										</selector>
+										<selector selector="status-dropped">
+											<compareDecision model="studentOverview.status" constant="dropped" />
+										</selector>
+										<selector selector="status-added">
+											<compareDecision model="studentOverview.status" constant="added" />
+										</selector>
+									</selectors>
+								</message>
+							</text>
+						</container>
+					</section>
+					<section>
+						<container>
+							<text>
+								<message selector="summary">
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-visited">
+													<model type="date" ref="studentOverview.lastSiteVisit" />
+													<selectors>
+														<selector selector="summary-visited-0">
+															<hasValueDecision model="studentOverview.lastSiteVisit" reversed="TRUE" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="text" ref="studentOverview.pctMelete" />
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-jforum">
+													<model type="text" ref="studentOverview.numJforum" />
+													<selectors>
+														<selector selector="summary-jforum-1">
+															<compareDecision model="studentOverview.numJforum" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-mneme">
+													<model type="text" ref="studentOverview.numMneme" />
+													<selectors>
+														<selector selector="summary-mneme-1">
+															<compareDecision model="studentOverview.numMneme" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-syllabus-viewed">
+													<selectors>
+														<selector selector="summary-syllabus-not-viewed">
+															<hasValueDecision model="studentOverview.syllabusViewed" reversed="TRUE" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-missed">
+													<model type="icon" icon="/icons/warning.png" />
+													<model type="text" ref="studentOverview.numItemsMissed" />
+													<selectors>
+														<selector selector="summary-missed-1">
+															<compareDecision model="studentOverview.numItemsMissed" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<selectors>
+										<selector selector="summary-no-missed">
+											<compareDecision model="studentOverview.numItemsMissed" constant="0" />
+										</selector>
+									</selectors>
+								</message>
+							</text>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<!-- repeat the nav up top w/o access key -->
+		<navigationBar>
+			<container>
+				<navigation title="prev" style="BUTTON" description="prev-description">
+					<disabled>
+						<hasValueDecision model="prev" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/previous.png" style="LEFT" />
+					<destination template="/student/{0}/{1}{2}">
+						<model ref="prev" />
+						<model ref="studentViewToggle" />
+						<model ref="return" />
+					</destination>
+				</navigation>
+				<text>
+					<message selector="n-of-size">
+						<model ref="position" />
+						<model ref="size" />
+					</message>
+				</text>
+				<navigation title="next" style="BUTTON" description="next-description">
+					<disabled>
+						<hasValueDecision model="next" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/next.png" style="LEFT" />
+					<destination template="/student/{0}/{1}{2}">
+						<model ref="next" />
+						<model ref="studentViewToggle" />
+						<model ref="return" />
+					</destination>
+				</navigation>
+				<divider />
+				<navigation title="return" style="BUTTON" description="return-description" submit="TRUE">
+					<icon icon="/icons/return.png" style="LEFT" />
+					<destination template="{0}">
+						<model ref="return" />
+					</destination>
+				</navigation>
+			</container>
+		</navigationBar>
+
+		<entityList style="FLAT">
+			<iterator name="item" model="mapItems" />
+			<emptyTitle>
+				<message selector="list-empty" />
+			</emptyTitle>
+			<colorize color="#D0D0D0">
+				<orDecision>
+					<compareDecision model="item.type" constant="header" />
+					<compareDecision model="item.accessStatus" constant="invalid" />
+					<compareDecision model="item.accessStatus" constant="unpublished" />
+				</orDecision>
+			</colorize>
+
+			<opaque opaque="3">
+				<orDecision>
+					<compareDecision model="item.accessStatus" constant="invalid" />
+					<compareDecision model="item.accessStatus" constant="unpublished" />
+				</orDecision>
+			</opaque>
+
+			<entityActions>
+				<attachments list="FALSE" model="exportRef" icon="/icons/export.png" />
+				<navigation title="pm" style="LINK" submit="TRIGGER">
+					<destination template="var h=window.open('/portal/tool/{0}/pm/amSendTo/0/{1}.page',null,'height=560,width=640,left=60,top=40,toolbar=no,directories=no,status=no,location=no,menubar=no,scrollbars=yes,resizable=no');h.focus();">
+						<model ref="pmTool" />
+						<model ref="pmCode" />
+					</destination>
+					<icon icon="/icons/pm.png" style="LEFT" />
+					<included>
+					  <orDecision>
+						<compareDecision model="studentOverview.status" constant="enrolled" />
+						<compareDecision model="studentOverview.status" constant="added" />
+					  </orDecision>	
+					</included>
+				</navigation>
+				<selection>
+					<selectionChoices>
+						<selectionChoice>
+							<displayMessage>
+								<message selector="view-choice" />
+							</displayMessage>
+							<valueMessage>
+								<message template="true" />
+							</valueMessage>
+						</selectionChoice>
+					</selectionChoices>
+					<model ref="studentView.value" />
+					<destination template="{0}">
+						<model ref="studentViewDestination" />
+					</destination>
+				</selection>
+			</entityActions>
+
+			<headings color="#D0D0D0" padding="FALSE">
+				<heading>
+					<compareDecision model="item.type" constant="header" />
+					<message selector="header">
+						<model type="icon" icon="/icons/bullet_black.png" />
+						<model ref="item.title" type="text" />
+					</message>
+				</heading>
+			</headings>
+
+			<entityRowIncluded>
+				<compareDecision model="item.type" constant="header" reversed="TRUE" />
+			</entityRowIncluded>
+
+			<columns>
+
+				<!-- progress -->
+				<modelColumn pixels="16" centered="TRUE">
+					<entityIncluded selector="na">
+						<compareDecision model="item.type" constant="survey" reversed="TRUE" />
+						<compareDecision model="item.type" constant="fce" reversed="TRUE" />
+					</entityIncluded>
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="progress-complete" disabled="TRUE">
+							<icon icon="/icons/finish.gif" style="LEFT" />
+							<included>
+								<compareDecision model="item.progressStatus" constant="complete" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" disabled="TRUE">
+							<description>
+								<message selector="progress-not-mastered">
+									<selectors>
+										<selector selector="progress-not-mastered-ungraded">
+											<compareDecision model="item.scoreStatus" constant="complete" reversed="TRUE" />
+										</selector>
+										<selector selector="progress-not-mastered-closed">
+											<compareDecision model="item.accessStatus" constant="published_closed" />
+										</selector>
+									</selectors>
+									<model ref="item.masteryLevelScore" type="float" decimal2="TRUE" />
+								</message>
+							</description>
+							<icon icon="/icons/not-mastered.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.progressStatus" constant="belowMastery" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" disabled="TRUE">
+							<description>
+								<message selector="progress-partially-complete-jforum">
+									<selectors>
+										<selector selector="progress-partially-complete-melete">
+											<compareDecision model="item.type.appCode" constant="3" />
+										</selector>
+										<selector selector="progress-partially-complete-mneme">
+											<compareDecision model="item.type.appCode" constant="0" />
+										</selector>
+									</selectors>
+									<model ref="item.countRequired" />
+								</message>
+							</description>
+							<icon icon="/icons/status_away.png" style="LEFT" />
+							<included>
+								<orDecision>
+									<compareDecision model="item.progressStatus" constant="belowCount" />
+									<compareDecision model="item.progressStatus" constant="inProgress" />
+								</orDecision>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="progress-missed" disabled="TRUE">
+							<description>
+								<message selector="progress-missed">
+									<model type="date" missing="dash" ref="item.finalDate" />
+								</message>
+							</description>
+							<icon icon="/icons/exclamation.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.progressStatus" constant="missed" />
+							</included>
+						</navigation>
+						<navigation style="LINK" description="progress-missed-no-sub" submit="TRUE" disabled="TRUE">
+							<icon icon="/icons/exclamation.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.progressStatus" constant="missedNoSub" />
+							</included>
+						</navigation>
+						<navigation style="LINK" description="progress-missed-no-sub-again" submit="TRUE" disabled="TRUE">
+							<icon icon="/icons/missed-try-again.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.progressStatus" constant="missedNoSubAvailable" />
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<!-- info -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-info" destination="X" >
+							<icon icon="/icons/information.png" style="LEFT" />
+							<icons>
+								<icon icon="/icons/information-prereq.png">
+									<compareDecision model="item.itemInfo.infoClass" constant="blocked" />
+								</icon>
+								<icon icon="/icons/information-closed.png">
+									<compareDecision model="item.itemInfo.infoClass" constant="unavailable" />
+								</icon>
+							</icons>
+							<failedRequirementsMessage>
+								<message selector="item-info-message-available">
+									<selectors>
+										<selector selector="item-info-message-finished">
+											<compareDecision model="item.itemInfo" constant="complete" />
+										</selector>
+										<selector selector="item-info-message-invalid">
+											<compareDecision model="item.itemInfo" constant="unavailableInvalid" />
+										</selector>
+										<selector selector="item-info-message-unpublished">
+											<compareDecision model="item.itemInfo" constant="unavailableUnpublished" />
+										</selector>
+										<selector selector="item-info-message-will-open">
+											<compareDecision model="item.itemInfo" constant="unavailableNotYetOpen" />
+										</selector>
+										<selector selector="item-info-message-has-closed">
+											<compareDecision model="item.itemInfo" constant="unavailableHasClosed" />
+										</selector>
+										<selector selector="item-info-message-has-closed-no-date">
+											<compareDecision model="item.itemInfo" constant="unavailableHasClosedNoDate" />
+										</selector>
+										<selector selector="item-info-message-did-not-complete">
+											<compareDecision model="item.itemInfo" constant="unavailableDidNotComplete" />
+										</selector>
+										<selector selector="item-info-message-did-not-complete-available">
+											<compareDecision model="item.itemInfo" constant="availableDidNotComplete" />
+										</selector>
+										<selector selector="item-info-message-blocked-mastery-ungraded">
+											<compareDecision model="item.itemInfo" constant="blockedByUngradedMastery" />
+										</selector>
+										<selector selector="item-info-message-blocked-mastery">
+											<compareDecision model="item.itemInfo" constant="blockedByMastery" />
+										</selector>
+										<selector selector="item-info-message-blocked-partially-complete-jforum">
+											<compareDecision model="item.itemInfo" constant="blockedByCountRequired" />
+											<compareDecision model="item.blockedBy.type.appCode" constant="1" />
+										</selector>
+										<selector selector="item-info-message-blocked-partially-complete-melete">
+											<compareDecision model="item.itemInfo" constant="blockedByCountRequired" />
+											<compareDecision model="item.blockedBy.type.appCode" constant="3" />
+										</selector>
+										<selector selector="item-info-message-blocked">
+											<compareDecision model="item.itemInfo" constant="blocked" />
+										</selector>
+										<selector selector="item-info-message-partially-complete-jforum">
+											<compareDecision model="item.itemInfo" constant="inProgress" />
+											<compareDecision model="item.type.appCode" constant="1" />
+										</selector>
+										<selector selector="item-info-message-partially-complete-melete">
+											<compareDecision model="item.itemInfo" constant="inProgress" />
+											<compareDecision model="item.type.appCode" constant="3" />
+										</selector>
+										<selector selector="item-info-message-partially-complete-mneme">
+											<compareDecision model="item.itemInfo" constant="inProgress" />
+											<compareDecision model="item.type.appCode" constant="0" />
+										</selector>
+										<selector selector="item-info-message-below-mastery-ungraded">
+											<compareDecision model="item.itemInfo" constant="belowMaseryUngraded" />
+										</selector>
+										<selector selector="item-info-message-below-mastery-closed">
+											<compareDecision model="item.accessStatus" constant="published_closed" />
+											<compareDecision model="item.itemInfo" constant="belowMastery" />
+										</selector>
+										<selector selector="item-info-message-below-mastery">
+											<compareDecision model="item.itemInfo" constant="belowMastery" />
+										</selector>
+										<selector selector="item-info-message-available-mastery">
+											<compareDecision model="item.itemInfo" constant="availableMasteryLevelRequired" />
+										</selector>
+										<selector selector="item-info-message-available-count-jforum">
+											<compareDecision model="item.itemInfo" constant="availableCountRequired" />
+											<compareDecision model="item.type.appCode" constant="1" />
+										</selector>
+										<selector selector="item-info-message-available-count-melete">
+											<compareDecision model="item.itemInfo" constant="availableCountRequired" />
+											<compareDecision model="item.type.appCode" constant="3" />
+										</selector>
+										<selector selector="item-info-message-available-no-count-jforum">
+											<compareDecision model="item.itemInfo" constant="availableNoCompletePossible" />
+										</selector>
+									</selectors>
+									<model type="date" missing="dash" ref="item.open" />
+									<model type="date" missing="dash" ref="item.finalDate" />
+									<model ref="item.blockedByTitle" type="text" />
+									<model type="date" missing="dash" ref="item.finished" />
+									<model ref="item.masteryLevelScore" type="float" decimal2="TRUE" />
+									<model ref="item.blockedBy.masteryLevelScore" type="float" decimal2="TRUE" />
+									<model ref="item.countRequired" />
+									<model ref="item.blockedBy.countRequired" />
+								</message>
+							</failedRequirementsMessage>
+							<requirements>
+								<hasValueDecision model="item" reversed="TRUE" />
+							</requirements>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-invalid" disabled="TRUE">
+							<icon icon="/icons/warning.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="invalid"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-unpublished" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="unpublished"/>
+								<compareDecision model="item.type.appCode" constant="1" reversed="TRUE" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-deny-access" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="unpublished"/>
+								<compareDecision model="item.type.appCode" constant="1" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published-hidden" disabled="TRUE">
+							<icon icon="/icons/invisible.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="published_hidden"/>
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<!--  type -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-type-test" disabled="TRUE">
+							<icon icon="/icons/test_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="test" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-survey" disabled="TRUE">
+							<icon icon="/icons/survey_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="survey" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-fce" disabled="TRUE">
+							<icon icon="/icons/fce_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="fce" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-offline" disabled="TRUE">
+							<icon icon="/icons/offline_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="offline" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-assignment" disabled="TRUE">
+							<icon icon="/icons/assignment_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="assignment" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-forum" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="forum" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-topic" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="topic" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-category" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="category" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-syllabus" disabled="TRUE">
+							<icon icon="/icons/syllabus.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="syllabus" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-module" disabled="TRUE">
+							<icon icon="/icons/melete.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="module" />
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<!-- title -->
+				<column>
+					<title>
+						<message selector="list-header-title" />
+					</title>
+					<container>
+						<navigation style="LINK" portal="TRUE" wrap="TRUE" disabled="TRUE">
+							<title>
+								<message selector="list-title">
+									<model ref="item.title" type="text" />
+								</message>
+							</title>
+						</navigation>
+					</container>
+				</column>
+
+				<!-- availability date -->
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="list-header-open" />
+					</title>
+					<model type="date" missing="dash2" ref="item.open" twoLine="TRUE" />
+				</modelColumn>
+
+				<!-- availability date -->
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="list-header-due" />
+					</title>
+					<model type="date" missing="dash2" ref="item.due" twoLine="TRUE" />
+				</modelColumn>
+
+				<!-- completion date -->
+				<modelColumn wrap="FALSE">
+					<entityIncluded>
+						<message selector="na">
+							<selectors>
+								<selector selector="dash">
+									<decision model="item.suppressFinished" />
+								</selector>
+							</selectors>
+						</message>
+						<compareDecision model="item.type" constant="survey" reversed="TRUE" />
+						<compareDecision model="item.type" constant="fce" reversed="TRUE" />
+						<compareDecision model="item.type" constant="offline" reversed="TRUE" />
+						<decision model="item.suppressFinished" reversed="TRUE" />
+					</entityIncluded>
+					<title>
+						<message selector="list-header-finished" />
+					</title>
+					<model type="date" missing="dash2" ref="item.finished" twoLine="TRUE" />
+				</modelColumn>
+
+				<!-- count -->
+				<column wrap="FALSE">
+					<entityIncluded selector="na">
+						<compareDecision model="item.type" constant="survey" reversed="TRUE" />
+						<compareDecision model="item.type" constant="fce" reversed="TRUE" />
+						<compareDecision model="item.type" constant="offline" reversed="TRUE" />
+					</entityIncluded>
+					<title>
+						<message selector="list-header-count" />
+					</title>
+					<container>
+						<text>
+							<message selector="list-fmt-count">
+								<model type="text" ref="item.count" missing="dash" />
+								<selectors>
+									<selector selector="list-fmt-count-jforum-1">
+										<orDecision>
+											<compareDecision model="item.type" constant="forum" />
+											<compareDecision model="item.type" constant="topic" />
+											<compareDecision model="item.type" constant="category" />
+										</orDecision>
+										<compareDecision model="item.count" constant="1" />
+									</selector>
+									<selector selector="list-fmt-count-melete-1">
+										<compareDecision model="item.type" constant="module" />
+										<compareDecision model="item.count" constant="1" />
+									</selector>
+									<selector selector="list-fmt-count-mneme-1">
+										<compareDecision model="item.count" constant="1" />
+										<orDecision>
+											<compareDecision model="item.type" constant="assignment" />
+											<compareDecision model="item.type" constant="test" />
+											<compareDecision model="item.type" constant="survey" />
+											<compareDecision model="item.type" constant="fce" />
+											<compareDecision model="item.type" constant="offline" />
+										</orDecision>
+									</selector>
+									<selector selector="list-fmt-count-jforum">
+										<orDecision>
+											<compareDecision model="item.type" constant="forum" />
+											<compareDecision model="item.type" constant="topic" />
+											<compareDecision model="item.type" constant="category" />
+										</orDecision>
+										<hasValueDecision model="item.count" />
+									</selector>
+									<selector selector="list-fmt-count-melete">
+										<compareDecision model="item.type" constant="module" />
+										<hasValueDecision model="item.count" />
+									</selector>
+									<selector selector="list-fmt-count-mneme">
+										<hasValueDecision model="item.count" />
+										<orDecision>
+											<compareDecision model="item.type" constant="assignment" />
+											<compareDecision model="item.type" constant="test" />
+											<compareDecision model="item.type" constant="survey" />
+											<compareDecision model="item.type" constant="fce" />
+											<compareDecision model="item.type" constant="offline" />
+										</orDecision>
+									</selector>
+								</selectors>
+							</message>
+						</text>					
+					</container>
+				</column>
+
+				<!-- completion score -->
+				<column wrap="FALSE">
+					<title>
+						<message selector="list-header-score" />
+					</title>
+					<container>
+						<text>
+							<message selector="list-fmt-score">
+								<model missing="dash" ref="item.score" type="float" decimal2="TRUE" />
+								<selectors>
+									<selector selector="list-fmt-score-partial">
+										<compareDecision model="item.scoreStatus" constant="partial" />
+									</selector>
+									<selector selector="list-fmt-score-pending">
+										<compareDecision model="item.scoreStatus" constant="pending" />
+									</selector>
+									<selector selector="list-fmt-score-na">
+										<compareDecision model="item.scoreStatus" constant="na" />
+									</selector>
+								</selectors>
+							</message>
+						</text>
+					</container>
+					<navigations>
+						<navigation style="LINK" portal="TRUE" wrap="TRUE" title="list-nav-review" description="evaluation-not-reviewed">
+							<icon icon="/icons/eval-not-reviewed.png" style="LEFT" />
+							<destination template="/{0}/{1}/student/{2}/{3}{4}">
+								<model ref="item.toolId" />
+								<model ref="item.reviewLink" />
+								<model ref="userId" />
+								<model ref="studentViewToggle" />
+								<model ref="return" />
+							</destination>
+							<included>
+								<hasValueDecision model="item.reviewLink" />
+								<decision model="item.evaluationNotReviewed" />
+							</included>
+						</navigation>
+						<navigation style="LINK" portal="TRUE" wrap="TRUE" title="list-nav-review">
+							<destination template="/{0}/{1}/student/{2}/{3}{4}">
+								<model ref="item.toolId" />
+								<model ref="item.reviewLink" />
+								<model ref="userId" />
+								<model ref="studentViewToggle" />
+								<model ref="return" />
+							</destination>
+							<included>
+								<hasValueDecision model="item.reviewLink" />
+								<decision reversed="TRUE" model="item.evaluationNotReviewed" />
+							</included>
+						</navigation>
+					</navigations>
+				</column>
+
+			</columns>
+		</entityList>
+
+		<!-- nav -->
+		<navigationBar>
+			<container>
+				<navigation title="prev" style="BUTTON" description="prev-description" accessKey="prev-access">
+					<disabled>
+						<hasValueDecision model="prev" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/previous.png" style="LEFT" />
+					<destination template="/student/{0}/{1}{2}">
+						<model ref="prev" />
+						<model ref="studentViewToggle" />
+						<model ref="return" />
+					</destination>
+				</navigation>
+				<text>
+					<message selector="n-of-size">
+						<model ref="position" />
+						<model ref="size" />
+					</message>
+				</text>
+				<navigation title="next" style="BUTTON" description="next-description" accessKey="next-access">
+					<disabled>
+						<hasValueDecision model="next" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/next.png" style="LEFT" />
+					<destination template="/student/{0}/{1}{2}">
+						<model ref="next" />
+						<model ref="studentViewToggle" />
+						<model ref="return" />
+					</destination>
+				</navigation>
+				<divider />
+				<navigation title="return" style="BUTTON" description="return-description" accessKey="return-access">
+					<icon icon="/icons/return.png" style="LEFT" />
+					<destination template="{0}">
+						<model ref="return" />
+					</destination>
+				</navigation>
+			</container>
+		</navigationBar>
+
+	</container>
+
+</interface>

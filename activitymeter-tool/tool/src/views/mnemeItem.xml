@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/mnemeItem.xml $
+ * $Id: mnemeItem.xml 12131 2015-11-25 15:34:48Z mallikamt $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011, 2012, 2015 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="mneme-item-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="mneme-item-header">
+									<model type="icon" icon="/icons/mneme.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+							<text>
+								<message selector="item">
+									<model type="text" ref="mnemeItemDetail.title" />
+								</message>
+							</text>
+							<text>
+								<message selector="status-open">
+									<selectors>
+										<selector selector="status-closed">
+											<compareDecision model="mnemeItemDetail.accessStatus" constant="closed" />
+										</selector>
+										<selector selector="status-invalid">
+											<compareDecision model="mnemeItemDetail.accessStatus" constant="invalid" />
+										</selector>
+										<selector selector="status-not-open">
+											<compareDecision model="mnemeItemDetail.accessStatus" constant="notOpen" />
+										</selector>
+										<selector selector="status-hidden-open">
+											<compareDecision model="mnemeItemDetail.accessStatus" constant="hiddenUntilOpen" />
+										</selector>
+										<selector selector="status-unpublished">
+											<compareDecision model="mnemeItemDetail.accessStatus" constant="unpublished" />
+										</selector>
+									</selectors>
+								</message>
+							</text>
+							<text>
+								<message selector="dates">
+									<model type="date" ref="mnemeItemDetail.openDate" missing="not-set" />
+									<model type="date" ref="mnemeItemDetail.dueDate" missing="not-set" />
+									<model type="date" ref="mnemeItemDetail.acceptUntilDate" missing="not-set" />
+								</message>
+							</text>
+						</container>
+					</section>
+					<section>
+						<container>
+							<text>
+								<included>
+									<compareDecision reversed="TRUE" model="mnemeItemDetail.type" constant="offline" />
+								</included>
+								<message selector="summary">
+									<model type="text" ref="mnemeItemDetail.pctSubmitted" />
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-progress">
+													<model type="text" ref="mnemeItemDetail.numInProgress" />
+													<selectors>
+														<selector selector="summary-progress-1">
+															<compareDecision model="mnemeItemDetail.numInProgress" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-not">
+													<model type="text" ref="mnemeItemDetail.numNotSubmitted" />
+													<selectors>
+														<selector selector="summary-not-1">
+															<compareDecision model="mnemeItemDetail.numNotSubmitted" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+								</message>
+							</text>
+					
+							<text>
+								<included>
+									<compareDecision model="mnemeItemDetail.type" constant="offline" />
+								</included>
+								<message selector="summary-offline">
+									<model type="text" ref="mnemeItemDetail.pctSubmitted" />
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-not-offline">
+													<model type="text" ref="mnemeItemDetail.numNotSubmitted" />
+													<selectors>
+														<selector selector="summary-not-1-offline">
+															<compareDecision model="mnemeItemDetail.numNotSubmitted" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+								</message>
+							</text>
+
+							<navigation title="pm" style="LINK" submit="TRIGGER">
+								<included>
+									<compareDecision model="mnemeItemDetail.type" constant="offline" reversed="TRUE" />
+								</included>
+								<icon icon="/icons/pm.png" style="LEFT" />
+								<included>
+									<hasValueDecision model="pmTool" />
+									<compareDecision model="mnemeItemDetail.type" constant="survey" reversed="TRUE" />
+								</included>
+								<destination template="var h=window.open('/portal/tool/{0}/pm/amSendTo/0/{1}.page',null,'height=560,width=640,left=60,top=40,toolbar=no,directories=no,status=no,location=no,menubar=no,scrollbars=yes,resizable=no');h.focus();">
+									<model ref="pmTool" />
+									<model ref="pmCode" />
+								</destination>
+							</navigation>
+							<navigation title="pm-offline" style="LINK" submit="TRIGGER">
+								<included>
+									<compareDecision model="mnemeItemDetail.type" constant="offline" />
+								</included>
+								<icon icon="/icons/pm.png" style="LEFT" />
+								<included>
+									<hasValueDecision model="pmTool" />
+									<compareDecision model="mnemeItemDetail.type" constant="survey" reversed="TRUE" />
+								</included>
+								<destination template="var h=window.open('/portal/tool/{0}/pm/amSendTo/0/{1}.page',null,'height=560,width=640,left=60,top=40,toolbar=no,directories=no,status=no,location=no,menubar=no,scrollbars=yes,resizable=no');h.focus();">
+									<model ref="pmTool" />
+									<model ref="pmCode" />
+								</destination>
+							</navigation>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<!-- repeat the nav up top w/o access key -->
+		<navigationBar>
+			<included>
+				<compareDecision model="mnemeItemDetail.type" constant="survey" reversed="TRUE" />
+			</included>
+			<container>
+				<navigation title="prev" style="BUTTON" description="prev-description">
+					<disabled>
+						<hasValueDecision model="prev" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/previous.png" style="LEFT" />
+					<destination template="/mneme_item/{0}">
+						<model ref="prev" />
+					</destination>
+				</navigation>
+				<text>
+					<message selector="n-of-size">
+						<model ref="position" />
+						<model ref="size" />
+					</message>
+				</text>
+				<navigation title="next" style="BUTTON" description="next-description">
+					<disabled>
+						<hasValueDecision model="next" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/next.png" style="LEFT" />
+					<destination template="/mneme_item/{0}">
+						<model ref="next" />
+					</destination>
+				</navigation>
+				<divider />
+				<navigation title="return" style="BUTTON" description="return-description" submit="TRUE">
+					<icon icon="/icons/return.png" style="LEFT" />
+					<destination template="{0}">
+						<model ref="return" />
+					</destination>
+				</navigation>
+			</container>
+		</navigationBar>
+
+		<!-- the list of participants, and their overviews (or, for surveys, a note) -->
+
+		<section>
+			<included>
+				<compareDecision model="mnemeItemDetail.type" constant="survey" />
+			</included>
+			<container>
+				<instructions selector="no-survey-details" />
+			</container>
+		</section>
+
+		<entityList style="FLAT">
+			<included>
+				<compareDecision model="mnemeItemDetail.type" constant="survey" reversed="TRUE" />
+			</included>
+			<iterator name="user">
+				<model ref="participantDetails" />
+			</iterator>
+
+			<emptyTitle>
+				<message selector="no-users" />
+			</emptyTitle>
+
+			<colorize color="#FFBAD2">
+				<compareDecision model="user.status" constant="blocked" />
+			</colorize>
+
+			<columns>
+
+				<!-- progress -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" disabled="TRUE">
+							<description>
+								<message selector="in-progress" />
+							</description>
+							<icon icon="/icons/status_away.png" style="LEFT" />
+							<included>
+								<decision model="user.inProgress" />
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="name" />
+					</title>
+					<model type="userInfo" ref="user.id" selector="SORTNAME" disambiguate="TRUE"  />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="0" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/0A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/0D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<column>
+					<title>
+						<message selector="status" />
+					</title>
+					<container>
+						<text>
+							<message selector="enrolled">
+								<selectors>
+								    <selector selector="added">
+										<compareDecision model="user.status" constant="added" />	
+									</selector>
+									<selector selector="blocked">
+										<compareDecision model="user.status" constant="blocked" />	
+									</selector>
+									<selector selector="dropped">
+										<compareDecision model="user.status" constant="dropped" />	
+									</selector>
+								</selectors>
+							</message>
+						</text>
+					</container>
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="1" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/1A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/1D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+				</column>
+
+				<modelColumn wrap="FALSE">
+					<included>
+						<compareDecision model="mnemeItemDetail.type" constant="offline" reversed="TRUE" />
+					</included>
+					<title>
+						<message selector="started" />
+					</title>
+					<model type="date" ref="user.startedDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="2" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/2A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/2D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+					<entityIncluded selector="dash">
+						<decision model="user.suppressDates" reversed="TRUE" />
+					</entityIncluded>
+				</modelColumn>
+
+				<column wrap="FALSE">
+					<included>
+						<compareDecision model="mnemeItemDetail.type" constant="offline" reversed="TRUE" />
+					</included>
+					<title>
+						<message selector="finished" />
+					</title>
+					<container>
+						<text>
+							<message>
+								<model type="date" ref="user.finishedDate" missing="dash2" twoLine="TRUE" />
+							</message>
+							<included>
+								<decision model="user.inProgress" reversed="TRUE" />
+							</included>
+						</text>
+						<text>
+							<message selector="submission-in-progress" />
+							<included>
+								<decision model="user.inProgress" />
+							</included>
+						</text>
+					</container>
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="3" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/3A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/3D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+					<entityIncluded selector="dash">
+						<decision model="user.suppressDates" reversed="TRUE" />
+					</entityIncluded>
+				</column>
+
+				<modelColumn wrap="FALSE">
+					<included>
+						<compareDecision model="mnemeItemDetail.type" constant="offline" />
+					</included>
+					<title>
+						<message selector="evaluated" />
+					</title>
+					<model type="date" ref="user.evaluated" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="5" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/5A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/5D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<!-- evaluation reviewed status -->
+				<column pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="evaluation-not-reviewed" disabled="TRUE">
+							<icon icon="/icons/eval-not-reviewed.png" style="LEFT" />
+							<included>
+								<decision model="user.evaluationNotReviewed" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="evaluation-reviewed" disabled="TRUE">
+							<icon icon="/icons/eval-reviewed.png" style="LEFT" />
+							<included>
+								<decision model="user.evaluationReviewed" />
+							</included>
+						</navigation>
+					</navigations>
+				</column>
+
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="reviewed" />
+					</title>
+					<model type="date" ref="user.reviewed" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="4" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/mneme_item/{0}/4A">
+								<model ref="itemId" />
+							</destination>
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/mneme_item/{0}/4D">
+								<model ref="itemId" />
+							</destination>
+						</desc>
+					</sort>
+				</modelColumn>
+
+			</columns>
+
+		</entityList>
+
+		<!-- nav -->
+		<navigationBar>
+			<container>
+				<navigation title="prev" style="BUTTON" description="prev-description" accessKey="prev-access">
+					<disabled>
+						<hasValueDecision model="prev" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/previous.png" style="LEFT" />
+					<destination template="/mneme_item/{0}">
+						<model ref="prev" />
+					</destination>
+				</navigation>
+				<text>
+					<message selector="n-of-size">
+						<model ref="position" />
+						<model ref="size" />
+					</message>
+				</text>
+				<navigation title="next" style="BUTTON" description="next-description" accessKey="next-access">
+					<disabled>
+						<hasValueDecision model="next" reversed="TRUE" />
+					</disabled>
+					<icon icon="/icons/next.png" style="LEFT" />
+					<destination template="/mneme_item/{0}">
+						<model ref="next" />
+					</destination>
+				</navigation>
+				<divider />
+				<navigation title="return" style="BUTTON" description="return-description" accessKey="return-access">
+					<icon icon="/icons/return.png" style="LEFT" />
+					<destination template="{0}">
+						<model ref="return" />
+					</destination>
+				</navigation>
+			</container>
+		</navigationBar>
+
+	</container>
+
+</interface>

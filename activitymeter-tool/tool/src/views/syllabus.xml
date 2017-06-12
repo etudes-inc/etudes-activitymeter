@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/syllabus.xml $
+ * $Id: syllabus.xml 12131 2015-11-25 15:34:48Z mallikamt $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011, 2012, 2015 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="syllabus-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="syllabus-header">
+									<model type="icon" icon="/icons/syllabus.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+						</container>
+					</section>
+					<section>
+						<container>
+							<text>
+								<message selector="summary">
+									<model type="text" ref="syllabusOverview.pctAccepted" />
+									<model type="text" ref="syllabusOverview.pctViewed" />
+								</message>
+							</text>
+							
+							<navigation title="pm" style="LINK" submit="TRIGGER">
+								<icon icon="/icons/pm.png" style="LEFT" />
+								<included>
+									<hasValueDecision model="pmTool" />
+								</included>
+									<destination template="var h=window.open('/portal/tool/{0}/pm/amSendTo/0/{1}.page',null,'height=560,width=640,left=60,top=40,toolbar=no,directories=no,status=no,location=no,menubar=no,scrollbars=yes,resizable=no');h.focus();">
+									<model ref="pmTool" />
+									<model ref="pmCode" />
+								</destination>
+							</navigation>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<!-- the list of participants, and their overviews -->
+		<entityList style="FLAT">
+			<iterator name="user">
+				<model ref="participantOverviews" />
+			</iterator>
+
+			<emptyTitle>
+				<message selector="no-users" />
+			</emptyTitle>
+
+			<colorize color="#FFBAD2">
+				<compareDecision model="user.status" constant="blocked" />
+			</colorize>
+
+			<columns>
+				<modelColumn>
+					<title>
+						<message selector="name" />
+					</title>
+					<model type="userInfo" ref="user.id" selector="SORTNAME" disambiguate="TRUE"  />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="0" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/syllabus/0A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/syllabus/0D" />
+						</desc>
+					</sort>
+				</modelColumn>
+
+				<column>
+					<title>
+						<message selector="status" />
+					</title>
+					<container>
+						<text>
+							<message selector="enrolled">
+								<selectors>
+								    <selector selector="added">
+										<compareDecision model="user.status" constant="added" />	
+									</selector>
+									<selector selector="blocked">
+										<compareDecision model="user.status" constant="blocked" />	
+									</selector>
+									<selector selector="dropped">
+										<compareDecision model="user.status" constant="dropped" />	
+									</selector>
+								</selectors>
+							</message>
+						</text>
+					</container>
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="1" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/syllabus/1A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/syllabus/1D" />
+						</desc>
+					</sort>
+				</column>
+
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="accepted" />
+					</title>
+					<model type="date" ref="user.syllabusDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="2" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/syllabus/2A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/syllabus/2D" />
+						</desc>
+					</sort>
+				</modelColumn>
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="first-visit" />
+					</title>
+					<model type="date" ref="user.syllabusFirstVisitDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="3" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/syllabus/3A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/syllabus/3D" />
+						</desc>
+					</sort>
+				</modelColumn>
+				<modelColumn wrap="FALSE">
+					<title>
+						<message selector="last-visit" />
+					</title>
+					<model type="date" ref="user.syllabusLastVisitDate" missing="dash2" twoLine="TRUE" />
+					<sort>
+						<active>
+							<compareDecision model="sort_column" constant="4" />
+						</active>
+						<direction>
+							<compareDecision model="sort_direction" constant="A" />
+						</direction>
+						<asc icon="/icons/sortascending.gif">
+							<message selector="asc" />
+							<destination template="/syllabus/4A" />
+						</asc>
+						<desc icon="/icons/sortdescending.gif">
+							<message selector="desc" />
+							<destination template="/syllabus/4D" />
+						</desc>
+					</sort>
+				</modelColumn>
+			</columns>
+
+		</entityList>
+	
+	</container>
+
+</interface>

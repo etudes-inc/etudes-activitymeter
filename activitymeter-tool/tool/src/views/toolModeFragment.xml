@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- !DOCTYPE fragment SYSTEM "http://source.sakaiproject.org/ambrosia/ambrosia.dtd" -->
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/toolModeFragment.xml $
+ * $Id: toolModeFragment.xml 1162 2011-02-09 00:37:09Z ggolden $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<fragment>
+	<container>
+		<modeBar>
+			<container>
+				<navigation title="overview-title" destination="/overview" style="LINK" accessKey="overview-access-key" submit="TRUE">
+					<icon icon="/icons/activity-meter.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableOverview" />
+					</disabled>
+				</navigation>
+				<navigation title="site-title" destination="/site" style="LINK" accessKey="site-access-key" submit="TRUE">
+					<icon icon="/icons/site.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableSite" />
+					</disabled>
+				</navigation>
+				<navigation title="syllabus-title" destination="/syllabus" style="LINK" accessKey="syllabus-access-key" submit="TRUE">
+					<icon icon="/icons/syllabus.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableSyllabus" />
+					</disabled>
+				</navigation>
+				<navigation title="melete-title" destination="/melete" style="LINK" accessKey="melete-access-key" submit="TRUE">
+					<icon icon="/icons/melete.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableMelete" />
+					</disabled>
+				</navigation>
+				<navigation title="jforum-title" destination="/jforum" style="LINK" accessKey="jforum-access-key" submit="TRUE">
+					<icon icon="/icons/jforum.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableJforum" />
+					</disabled>
+				</navigation>
+				<navigation title="mneme-title" destination="/mneme" style="LINK" accessKey="mneme-access-key" submit="TRUE">
+					<icon icon="/icons/mneme.png" style="LEFT" />
+					<disabled>
+						<hasValueDecision model="disableMneme" />
+					</disabled>
+				</navigation>
+			</container>
+		</modeBar>
+	</container>
+</fragment>

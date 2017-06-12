@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/mneme.xml $
+ * $Id: mneme.xml 9344 2014-11-25 00:12:42Z ggolden $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011, 2014 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="mneme-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="mneme-header">
+									<model type="icon" icon="/icons/mneme.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+						</container>
+					</section>
+					<section>
+						<container>
+							<text>
+								<message selector="summary">
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-test">
+													<model type="text" ref="mnemeOverview.numTestSubmissions" />
+													<model type="text" ref="mnemeOverview.numTestSubmissionsInProgress" />
+													<selectors>
+														<selector selector="summary-test-1">
+															<compareDecision model="mnemeOverview.numTestSubmissions" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-assignment">
+													<model type="text" ref="mnemeOverview.numAssignmentSubmissions" />
+													<model type="text" ref="mnemeOverview.numAssignmentSubmissionsInProgress" />
+													<selectors>
+														<selector selector="summary-assignment-1">
+															<compareDecision model="mnemeOverview.numAssignmentSubmissions" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-survey">
+													<model type="text" ref="mnemeOverview.numSurveySubmissions" />
+													<model type="text" ref="mnemeOverview.numSurveySubmissionsInProgress" />
+													<selectors>
+														<selector selector="summary-survey-1">
+															<compareDecision model="mnemeOverview.numSurveySubmissions" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+									<model type="component">
+										<container>
+											<text>
+												<message selector="summary-offline">
+													<model type="text" ref="mnemeOverview.numOfflineSubmissions" />
+													<selectors>
+														<selector selector="summary-offline-1">
+															<compareDecision model="mnemeOverview.numOfflineSubmissions" constant="1" />
+														</selector>
+													</selectors>
+												</message>
+											</text>
+										</container>
+									</model>
+								</message>
+							</text>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<entityList style="FLAT">
+			<iterator name="item">
+				<model ref="mnemeItemOverviews" />
+			</iterator>
+
+			<emptyTitle>
+				<message selector="no-items" />
+			</emptyTitle>
+
+			<columns>
+
+				<!-- status -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-invalid" disabled="TRUE">
+							<icon icon="/icons/warning.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.status" constant="invalid"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published" disabled="TRUE">
+							<icon icon="/icons/publish.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="open"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published" disabled="TRUE">
+							<icon icon="/icons/publish.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="closed"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-invisible" disabled="TRUE">
+							<icon icon="/icons/invisible.png" style="LEFT" />
+							<included>
+							    <compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="hiddenUntilOpen"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-not-open" disabled="TRUE">
+							<icon icon="/icons/item_not_yet_open.png" style="LEFT" />
+							<included>
+							    <compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="notOpen"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-unpublished" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.status" constant="na"/>
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<!--  type -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-type-test" disabled="TRUE">
+							<icon icon="/icons/test_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="test" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-survey" disabled="TRUE">
+							<icon icon="/icons/survey_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="survey" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-fce" disabled="TRUE">
+							<icon icon="/icons/fce_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="fce" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-offline" disabled="TRUE">
+							<icon icon="/icons/offline_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="offline" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-assignment" disabled="TRUE">
+							<icon icon="/icons/assignment_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="assignment" />
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="title" />
+					</title>
+					<model ref="item.title" max="80" />
+					<entityNavigations>
+						<navigation style="LINK">
+							<destination template="/mneme_item/{0}">
+								<model ref="item.id" />
+							</destination>
+						</navigation>
+					</entityNavigations>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="submitters" />
+					</title>
+					<model type="text" ref="item.numSubmitters" />
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="submissions" />
+					</title>
+					<model type="text" ref="item.numSubmissions" />
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="in-progress" />
+					</title>
+					<model type="text" ref="item.numInProgress" />
+				</modelColumn>
+
+			</columns>
+
+		</entityList>
+	
+	</container>
+
+</interface>

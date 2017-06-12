@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/activitymeter/trunk/activitymeter-tool/tool/src/views/melete.xml $
+ * $Id: melete.xml 12131 2015-11-25 15:34:48Z mallikamt $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011, 2015 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="melete-title" />
+	</title>
+
+	<!--mode bar-->
+	<modeContainer>
+		<alias to="ToolModeFragment" toolId="sakai.activitymeter" />
+	</modeContainer>
+
+	<subHeader>
+		<container>
+			<section treatment="columns">
+				<container>
+					<section>
+						<container>
+							<text treatment="header">
+								<message selector="melete-header">
+									<model type="icon" icon="/icons/melete.png" />
+								</message>
+							</text>
+							<text>
+								<message selector="course-term">
+									<model type="text" ref="siteInfo.title" />
+									<model type="text" ref="siteInfo.term" />
+								</message>
+							</text>
+						</container>
+					</section>
+					<section>
+						<container>
+							<text>
+								<message selector="summary">
+									<model type="text" ref="meleteOverview.pctSectionsViewed" />
+								</message>
+							</text>
+						</container>
+					</section>
+				</container>
+			</section>
+		</container>
+	</subHeader>
+
+	<container>
+
+		<entityList style="FLAT">
+			<iterator name="item">
+				<model ref="meleteItemOverviews" />
+			</iterator>
+
+			<emptyTitle>
+				<message selector="no-items" />
+			</emptyTitle>
+
+			<colorize color="#D0D0D0">
+				<decision model="item.isModule" />
+			</colorize>
+
+			<columns>
+
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-invalid" disabled="TRUE">
+							<icon icon="/icons/warning.png" style="LEFT" />
+							<included>
+								<decision model="item.isModule" />
+								<compareDecision model="item.status" constant="invalid"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published" disabled="TRUE">
+							<icon icon="/icons/publish.png" style="LEFT" />
+							<included>
+								<decision model="item.isModule" />
+								<compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="open"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published" disabled="TRUE">
+							<icon icon="/icons/publish.png" style="LEFT" />
+							<included>
+							    <decision model="item.isModule" />
+								<compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="closed"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-invisible" disabled="TRUE">
+							<icon icon="/icons/invisible.png" style="LEFT" />
+							<included>
+							    <decision model="item.isModule" />
+							    <compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="hiddenUntilOpen"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-not-open" disabled="TRUE">
+							<icon icon="/icons/item_not_yet_open.png" style="LEFT" />
+							<included>
+							    <decision model="item.isModule" />
+							    <compareDecision model="item.status" constant="published"/>
+								<compareDecision model="item.accessStatus" constant="notOpen"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-unpublished" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+							    <decision model="item.isModule" />
+								<compareDecision model="item.status" constant="na"/>
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="title" />
+					</title>
+					<model ref="item.title" max="80" />
+					<entityNavigations>
+						<navigation style="LINK">
+							<destination template="/melete_item/{0}">
+								<model ref="item.id" />
+							</destination>
+							<included>
+								<decision model="item.isModule" reversed="TRUE" />
+							</included>
+						</navigation>
+					</entityNavigations>
+				</modelColumn>
+
+				<modelColumn>
+					<title>
+						<message selector="viewers" />
+					</title>
+					<model type="text" ref="item.numViewers" />
+					<entityIncluded>
+						<decision model="item.isModule" reversed="TRUE" />
+					</entityIncluded>
+				</modelColumn>
+
+			</columns>
+
+		</entityList>
+	
+	</container>
+
+</interface>
